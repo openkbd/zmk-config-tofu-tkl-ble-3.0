@@ -1,0 +1,26 @@
+# Copyright (c) 2020 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+config SHIELD_TOFU_TKL_BLE_V3_ANSI_625U
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_ansi_625u)
+    select SPI
+
+config SHIELD_TOFU_TKL_BLE_V3_ANSI_7U
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_ansi_7u)
+    select SPI
+
+config SHIELD_TOFU_TKL_BLE_V3_ANSI_WKL
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_ansi_wkl)
+    select SPI
+
+config SHIELD_TOFU_TKL_BLE_V3_ISO_625U
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_iso_625u)
+    select SPI
+
+config SHIELD_TOFU_TKL_BLE_V3_ISO_7U
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_iso_7u)
+    select SPI
+
+config SHIELD_TOFU_TKL_BLE_V3_ISO_WKL
+    def_bool $(shields_list_contains,tofu_tkl_ble_v3_iso_wkl)
+    select SPI
