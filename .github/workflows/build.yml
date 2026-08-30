@@ -4,3 +4,47 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: yangdigi/zmk/.github/workflows/build-user-config.yml@main
+
+  rename:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Load config
+        id: cfg
+        run: |
+          source .github/config.env
+          echo "kbd=$KBD" >> $GITHUB_OUTPUT
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: firmware
+          path: firmware
+
+      - name: Set artifact name
+        id: meta
+        run: |
+          DATE=$(date +'%Y%m%d')
+          echo "name=firmware-${{ steps.cfg.outputs.kbd }}_zmk_${DATE}" >> $GITHUB_OUTPUT
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: ${{ steps.meta.outputs.name }}
+          path: firmware
+
+      - name: Delete original firmware artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ARTIFACT_ID=$(gh api \
+            repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts \
+            --jq '.artifacts[] | select(.name=="firmware") | .id')
+
+          [[ -n "$ARTIFACT_ID" ]] && \
+            gh api -X DELETE repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID
